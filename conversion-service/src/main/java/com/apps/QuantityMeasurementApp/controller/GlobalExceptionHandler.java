@@ -1,6 +1,6 @@
-package com.apps.auth_service.controller;
+package com.apps.QuantityMeasurementApp.controller;
 
-import com.apps.auth_service.dto.ErrorResponse;
+import com.apps.QuantityMeasurementApp.dto.ErrorResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
- * Global exception handler for auth-service.
+ * Global exception handler for conversion-service.
  * Catches all application exceptions and returns structured ErrorResponse bodies
  * with appropriate HTTP status codes.
  */
@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     // ─── Validation Errors (400) ──────────────────────────────────────────────
 
     /**
-     * Handles @Valid bean validation failures (e.g. blank email, short password).
+     * Handles @Valid bean validation failures.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
@@ -36,23 +36,23 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), message));
     }
 
-    // ─── Illegal Arguments (400) ──────────────────────────────────────────────
+    // ─── Invalid Unit / Business Logic (400) ─────────────────────────────────
 
     /**
-     * Handles explicit bad-argument cases (e.g. invalid unit in conversion).
+     * Handles invalid unit names or incompatible unit categories.
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
-        log.warn("Illegal argument: {}", ex.getMessage());
+        log.warn("Illegal argument in conversion: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage()));
     }
 
-    // ─── Auth / Business Failures (401) ──────────────────────────────────────
+    // ─── Auth / Runtime Failures (401) ───────────────────────────────────────
 
     /**
-     * Handles authentication failures — wrong credentials, expired tokens, etc.
+     * Handles runtime exceptions such as authentication failures.
      */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     // ─── Catch-All (500) ─────────────────────────────────────────────────────
 
     /**
-     * Catch-all handler for unexpected server-side errors.
+     * Catch-all handler for unexpected server errors.
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
