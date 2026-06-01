@@ -18,7 +18,7 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Expose the default API Gateway port
-EXPOSE 8081
+EXPOSE 8080
 
 # Start the application with memory limit for Render's free tier
 ENTRYPOINT ["java", "-Xmx300m", "-jar", "app.jar"]

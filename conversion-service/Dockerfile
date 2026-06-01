@@ -18,7 +18,7 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Expose the default Conversion Service port
-EXPOSE 8080
+EXPOSE 8081
 
 # Start the application with memory limit for Render's free tier
 ENTRYPOINT ["java", "-Xmx300m", "-jar", "app.jar"]
