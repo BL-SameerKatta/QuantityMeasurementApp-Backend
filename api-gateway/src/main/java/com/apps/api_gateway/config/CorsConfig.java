@@ -1,5 +1,6 @@
 package com.apps.api_gateway.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +15,18 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
+    @Value("${CORS_ALLOWED_ORIGINS:*}")
+    private String allowedOrigins;
+
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(false);
-        config.setAllowedOriginPatterns(List.of("*"));
+        if ("*".equals(allowedOrigins)) {
+            config.setAllowedOriginPatterns(List.of("*"));
+        } else {
+            config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+        }
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
         config.setMaxAge(3600L);

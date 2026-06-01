@@ -9,11 +9,11 @@ spring:
         webmvc:
           routes:
             - id: quantity-service
-              uri: lb://quantity-measurement-service
+              uri: ${CONVERSION_SERVICE_URL:lb://quantity-measurement-service}
               predicates:
                 - Path=/quantity/**
             - id: auth-service
-              uri: lb://auth-service
+              uri: ${AUTH_SERVICE_URL:lb://auth-service}
               predicates:
                 - Path=/auth/**
 
