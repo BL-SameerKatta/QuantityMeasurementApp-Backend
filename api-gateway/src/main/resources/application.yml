@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:file:.env[.properties]
   application:
-    name: ${APP_NAME}
+    name: ${APP_NAME:api-gateway}
   cloud:
     gateway:
       server:
@@ -18,7 +18,7 @@ spring:
                 - Path=/auth/**
 
 server:
-  port: ${PORT}
+  port: ${PORT:8080}
 
 eureka:
   client:
